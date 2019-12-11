@@ -1,3 +1,4 @@
+/* eslint-disable */
 <template>
   <div id="app">
     <table border="1">
@@ -17,7 +18,7 @@
 </template>
 
 <script>
-import Team from './classes/Team'
+import Team from './classes/Team';
 
 export default {
   name: 'app',
@@ -43,72 +44,69 @@ export default {
         new Team('Chakhtar', 'Ukraine', 'F', 6),
         new Team('Porto', 'Portugal', 'G', 5),
         new Team('Real', 'Espagne', 'H', 0),
-      ]
-    }
+      ],
+    };
   },
   computed: {},
   methods: {
     draw() {
-      this.resetPicks()
+      this.resetPicks();
 
-      let cpt = 0
-      let test = 0
+      let cpt = 0;
+      let test = 0;
 
       draw: while (cpt < this.nbDraws) {
-
         // copying the groups
-        let localWinners = this.winners.slice(0)
-        let localRunnersUp = this.runnersUp.slice(0)
-        let localDraw = []
+        const localWinners = this.winners.slice(0);
+        const localRunnersUp = this.runnersUp.slice(0);
+        const localDraw = [];
 
         for (let i = 0; i < localWinners.length; i++) {
-          const pickedIndex = Math.floor(Math.random() * localRunnersUp.length)
-          const runnerUp = localRunnersUp[pickedIndex]
-          const winner = localWinners[i]
+          const pickedIndex = Math.floor(Math.random() * localRunnersUp.length);
+          const runnerUp = localRunnersUp[pickedIndex];
+          const winner = localWinners[i];
 
           if (runnerUp.country === winner.country || runnerUp.pool === winner.pool) {
-            test++
-            continue draw
+            test++;
+            continue draw;
           }
 
-          localDraw[i] = runnerUp.name
-          localRunnersUp.splice(pickedIndex, 1)
+          localDraw[i] = runnerUp.name;
+          localRunnersUp.splice(pickedIndex, 1);
         }
 
         for (let j = 0; j < localWinners.length; j++) {
-          localWinners[j].allowedPicks.filter(pick => pick.name === localDraw[j])[0].timesPicked++
+          localWinners[j].allowedPicks.filter(pick => pick.name === localDraw[j])[0].timesPicked++;
         }
 
-        cpt++
+        cpt++;
       }
     },
     allowedPicks(team) {
       return this.runnersUp
         .filter(teamToFilter => teamToFilter.country !== team.country && teamToFilter.pool !== team.pool)
-        .map(teamToMap => {
-          return {
-            name: teamToMap.name,
-            timesPicked: 0
-          }
-        })
+        .map(teamToMap => ({
+          name: teamToMap.name,
+          timesPicked: 0,
+        }));
     },
     getPercentage(winner, runnerUp) {
-      let picks = winner.allowedPicks.filter(pick => pick.name === runnerUp.name);
+      const picks = winner.allowedPicks.filter(pick => pick.name === runnerUp.name);
       if (picks.length) {
-        return (picks[0].timesPicked / this.nbDraws * 100).toFixed(2)
+        return (picks[0].timesPicked / this.nbDraws * 100).toFixed(2);
       }
-      return ''
+      return '';
     },
     resetPicks() {
       for (let i = 0; i < this.winners.length; i++) {
-        this.winners[i].allowedPicks = this.allowedPicks(this.winners[i])
+        this.winners[i].allowedPicks = this.allowedPicks(this.winners[i]);
       }
-    }
+    },
   },
   created() {
-    this.resetPicks()
-  }
-}
+    this.resetPicks();
+  },
+};
 </script>
 
 <style>
